@@ -9,7 +9,7 @@ string connection = builder.Configuration.GetConnectionString("DefaultConnection
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connection));
 builder.Services.AddDefaultIdentity<IdentityUser>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddHttpContextAccessor();
@@ -38,8 +38,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
 
-app.MapControllerRoute(
-    name: "default",
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapRazorPages();
+    endpoints.MapControllerRoute(
+        name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+});
+
 
 app.Run();
